@@ -205,21 +205,26 @@ def main():
 
     model = model.half()
 
-    model_engine, optimizer, _, _ = deepspeed.initialize(
-        model=model,
-        config=args.deepspeed,
-        model_parameters=model.parameters()
-    )
+    # model_engine, optimizer, _, _ = deepspeed.initialize(
+    #     model=model,
+    #     config=args.deepspeed,
+    #     model_parameters=model.parameters()
+    # )
     
-    llm_engine, optimizer, _, _ = deepspeed.initialize(
-        model=llm,
-        config=args.deepspeed,
-        model_parameters=llm.parameters()
-    )
+    # llm_engine, optimizer, _, _ = deepspeed.initialize(
+    #     model=llm,
+    #     config=args.deepspeed,
+    #     model_parameters=llm.parameters()
+    # )
 
-    model = model_engine
+    # model = model_engine
     
-    llm = llm_engine
+    # llm = llm_engine
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    llm.to(device)
+    
     
     train_conversations(
         config=config,

@@ -47,7 +47,7 @@ class MambaCompressor(nn.Module):
         
         mem_token_mask = input_ids["input_ids"] == self.mem_token_id
     
-        batch_indices = torch.arange(outputs.size(0), device=outputs.device)[:, None]
+        batch_indices = torch.arange(outputs.size(0))[:, None]
         mem_positions = mem_token_mask.nonzero()
         batch_nums = mem_positions[:, 0]
         seq_positions = mem_positions[:, 1]
@@ -65,7 +65,7 @@ class MambaCompressor(nn.Module):
         for i, mem in enumerate(memory_features):
             if len(mem) < max_seq_len:
                 pad_len = max_seq_len - len(mem)
-                memory_features[i] = torch.cat([mem, torch.zeros(pad_len, mem.size(-1), device=mem.device)], dim=0)
+                memory_features[i] = torch.cat([mem, torch.zeros(pad_len, mem.size(-1))], dim=0)
         
         memory_features = torch.stack(memory_features)
 
@@ -112,8 +112,7 @@ class MambaCompressor(nn.Module):
             )
             
             model.memory_projection.load_state_dict(
-                torch.load(os.path.join(path, "memory_projection.pt"), 
-                        map_location=device)
+                torch.load(os.path.join(path, "memory_projection.pt"))
             )
         except:
             raise ValueError("Cannot load model")
