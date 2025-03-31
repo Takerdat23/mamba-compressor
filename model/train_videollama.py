@@ -210,8 +210,16 @@ def main():
         config=args.deepspeed,
         model_parameters=model.parameters()
     )
+    
+    llm_engine, optimizer, _, _ = deepspeed.initialize(
+        model=llm,
+        config=args.deepspeed,
+        model_parameters=llm.parameters()
+    )
 
     model = model_engine
+    
+    llm = llm_engine
     
     train_conversations(
         config=config,
